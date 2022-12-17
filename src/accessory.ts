@@ -58,10 +58,11 @@ class RGBLightStrip implements AccessoryPlugin {
 
   private readonly log: Logging;
   private readonly name: string;
+  private readonly ip: string;
+  private readonly port: string;
   private switchOn: boolean;
   private brightness: number;
   private colorTemp: number;
-
   private readonly stripeService: Service;
   private readonly informationService: Service;
 
@@ -74,8 +75,8 @@ class RGBLightStrip implements AccessoryPlugin {
 
     // An object of options to indicate where to post to
     var post_options = {
-        host: '192.168.178.88',
-        port: '80',
+        host: this.ip, //'192.168.178.88',
+        port: this.port, //'80',
         path: type, //'/power?value=1',
         method: 'POST',
         timeout: 300,
@@ -96,18 +97,22 @@ class RGBLightStrip implements AccessoryPlugin {
 
   constructor(log: Logging, config: AccessoryConfig, api: API) {
     this.log = log;
+    this.ip = config.ip;
+    this.port = config.port;
     this.name = config.name;
     this.switchOn = false;
     this.brightness = 0;
     this.colorTemp = 8;
 
     this.log.info("RGBLightStrip: constructor");
+    this.log.info("IP: ", this.ip);
+    this.log.info("Port: ", this.port);
     try {
       this.log.info('HTTP request for Power state');
       http.request(
         {
-          host: '192.168.178.88',
-          port: '80',
+          host: this.ip, //'192.168.178.88',
+          port: this.port, //'80',
           path: '/fieldValue?name=power',
           method: 'GET',
           timeout: 300,
@@ -137,8 +142,8 @@ class RGBLightStrip implements AccessoryPlugin {
       this.log.info('HTTP request for Brightness state');
       http.request(
         {
-          host: '192.168.178.88',
-          port: '80',
+          host: this.ip, //'192.168.178.88',
+          port: this.port, //'80',
           path: '/fieldValue?name=brightness',
           method: 'GET',
           timeout: 300,
@@ -171,8 +176,8 @@ class RGBLightStrip implements AccessoryPlugin {
           this.log.info('HTTP request for getCharacteristics(hap.Characteristic.On)');
           http.request(
             {
-              host: '192.168.178.88',
-              port: '80',
+              host: this.ip, //'192.168.178.88',
+              port: this.port, //'80',
               path: '/fieldValue?name=power',
               method: 'GET',
               timeout: 300,
@@ -215,8 +220,8 @@ class RGBLightStrip implements AccessoryPlugin {
           this.log.info('HTTP request for getCHaracteristics(hap.CHaracteristic.Brightness)');
           http.request(
             {
-              host: '192.168.178.88',
-              port: '80',
+              host: this.ip, //'192.168.178.88',
+              port: this.port, //'80',
               path: '/fieldValue?name=brightness',
               method: 'GET',
               timeout: 300,
